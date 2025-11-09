@@ -34,13 +34,26 @@ Resolve prediction markets in seconds, not days. This repository contains the in
    - `GET  /api/v1/status/:marketId`
    - `GET  /api/v1/proof/:marketId`
    - `GET  /api/v1/analytics`
+   - `GET  /api/v1/feed`
 
-Resolution Criteria (Crypto):
+Resolution Criteria:
+
+Crypto
 
 - JSON: `{ "domain": "crypto", "type": "price_above", "symbol": "BTC", "price": 50000, "timestamp": "2025-11-08T12:00:00Z" }`
 - Colon: `price_above:BTC:50000:2025-11-08T12:00:00Z`
 
-The API aggregates Binance and Coinbase 1-minute candles at the given timestamp and evaluates the outcome with a confidence score.
+Sports (NBA)
+
+- JSON: `{ "domain": "sports", "type": "match_winner", "league": "NBA", "home": "LAL", "away": "BOS", "pick": "LAL", "date": "2025-11-08" }`
+- Colon: `match_winner:NBA:2025-11-08:LAL:BOS:LAL`
+
+Elections (heuristic)
+
+- JSON: `{ "domain": "elections", "type": "winner", "race": "US-President", "candidate": "Joe Biden", "date": "2024-11-05" }`
+- Colon: `winner:US-President:2024-11-05:Joe Biden`
+
+The API aggregates Binance and Coinbase 1-minute candles at the given timestamp (crypto), uses ESPN/NBA scores (sports), and AP/Reuters headlines heuristics (elections), then evaluates the outcome with a confidence score.
 
 ## Project Structure
 
@@ -80,3 +93,4 @@ OracleAi/
 
 - Contracts are optimized for clarity at this stage; gas optimizations and UMA OO fallback will be added next.
 - Backend agents currently use placeholder logic and sources to ensure stability; integrations (APIs, scraping, Claude) will be layered in step-by-step.
+- On-chain submission is wired; set `RPC_URL`, `REGISTRY_ADDRESS`, and `PRIVATE_KEY` in `backend/.env` to enable. Proof payloads can be pinned to IPFS if `PINATA_API_KEY` and `PINATA_SECRET_KEY` are set.

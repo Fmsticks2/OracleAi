@@ -17,6 +17,8 @@ Copy `.env.example` to `.env` and set:
 - `RPC_URL` — BNB RPC (optional for now)
 - `REGISTRY_ADDRESS` — OracleRegistry contract address (optional for now)
 - `COINGECKO_API_KEY` — optional API key
+- `PRIVATE_KEY` — wallet key for on-chain submission (optional)
+- `PINATA_API_KEY` and `PINATA_SECRET_KEY` — for IPFS pinning of proof payloads (optional)
 
 ## Endpoints
 
@@ -24,6 +26,7 @@ Copy `.env.example` to `.env` and set:
 - `GET /api/v1/status/:marketId`
 - `GET /api/v1/proof/:marketId`
 - `GET /api/v1/analytics`
+- `GET /api/v1/feed` — recent resolutions feed for dashboard
 
 ### Resolution Criteria (Crypto)
 
@@ -44,3 +47,29 @@ Sources used:
 
 - Binance `BTCUSDT` 1-minute candles
 - Coinbase `BTC-USD` 1-minute candles
+
+### Resolution Criteria (Sports)
+
+Provide `resolutionCriteria` as JSON or colon format.
+
+- JSON:
+  - `{ "domain": "sports", "type": "match_winner", "league": "NBA", "home": "LAL", "away": "BOS", "pick": "LAL", "date": "2025-11-08" }`
+- Colon:
+  - `match_winner:NBA:2025-11-08:LAL:BOS:LAL`
+
+Sources used:
+
+- ESPN NBA Scoreboard
+- Official NBA scores page
+
+### Resolution Criteria (Elections)
+
+- JSON:
+  - `{ "domain": "elections", "type": "winner", "race": "US-President", "candidate": "Joe Biden", "date": "2024-11-05" }`
+- Colon:
+  - `winner:US-President:2024-11-05:Joe Biden`
+
+Sources used (heuristic fallback for MVP):
+
+- AP News elections hub
+- Reuters US politics
