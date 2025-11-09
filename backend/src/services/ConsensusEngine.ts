@@ -3,6 +3,7 @@ import { ScraperAgent } from '../agents/ScraperAgent';
 import { ValidatorAgent } from '../agents/ValidatorAgent';
 import { ReasoningAgent } from '../agents/ReasoningAgent';
 import { ProofAgent } from '../agents/ProofAgent';
+import { ChainService } from './ChainService';
 import type { ResolutionRequest, ResolutionResult } from '../types';
 
 export class ConsensusEngine {
@@ -11,6 +12,7 @@ export class ConsensusEngine {
   private validator = new ValidatorAgent();
   private reasoner = new ReasoningAgent();
   private proof = new ProofAgent();
+  private chain = new ChainService();
 
   async resolve(req: ResolutionRequest): Promise<ResolutionResult> {
     const start = Date.now();
@@ -20,20 +22,32 @@ export class ConsensusEngine {
     const validation = this.validator.evaluate([apiData, scrapeData]);
 
     const reasoning = await this.reasoner.conclude(req, validation);
-    const hash = await this.proof.generate({
+    const proofPayload = {
       req,
       validation,
       reasoning
-    });
+    };
+    const { hash, cid } = await this.proof.generate(proofPayload);
 
     const resolutionTime = Math.max(1, Math.round((Date.now() - start) / 1000));
+    let txHash: string | null = null;
+    if (this.chain.isReady()) {
+      try {
+        txHash = await this.chain.submitResolution(req.marketId, reasoning.outcome, reasoning.confidence, hash);
+      } catch (e) {
+        // On-chain submission failed; keep txHash null and continue
+        txHash = null;
+      }
+    }
+
     return {
       outcome: reasoning.outcome,
       confidence: reasoning.confidence,
       proofHash: hash,
+      cid: cid || null,
       sources: validation.sources,
       resolutionTime,
-      txHash: null
+      txHash
     };
   }
 }
