@@ -29,4 +29,27 @@ export interface CryptoPriceCriteria {
   timestamp: string; // ISO string (UTC)
 }
 
-export type ParsedCriteria = CryptoPriceCriteria; // extend with sports/elections later
+// Sports criteria
+export type SportsLeague = 'NBA';
+export type SportsCriteriaType = 'match_winner';
+export interface SportsMatchCriteria {
+  domain: 'sports';
+  type: SportsCriteriaType;
+  league: SportsLeague;
+  home: string; // team code, e.g., LAL
+  away: string; // team code, e.g., BOS
+  pick: string; // team code or 'home'/'away'
+  date: string; // YYYY-MM-DD
+}
+
+// Elections criteria
+export type ElectionsCriteriaType = 'winner';
+export interface ElectionsCriteria {
+  domain: 'elections';
+  type: ElectionsCriteriaType;
+  race: string; // e.g., US-President
+  candidate: string; // candidate full name
+  date: string; // ISO date
+}
+
+export type ParsedCriteria = CryptoPriceCriteria | SportsMatchCriteria | ElectionsCriteria;

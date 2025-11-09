@@ -1,6 +1,8 @@
 import type { ResolutionRequest } from '../types';
 import { parseCriteria } from '../services/criteria';
 import { resolveCryptoPrice } from '../services/CryptoResolver';
+import { resolveSportsMatch } from '../services/SportsResolver';
+import { resolveElectionWinner } from '../services/ElectionsResolver';
 
 export class ApiAgent {
   async fetch(req: ResolutionRequest): Promise<{ sources: string[]; agreement: number; proposedOutcome?: 'Yes' | 'No' | 'Invalid'; confidence?: number }> {
@@ -9,12 +11,16 @@ export class ApiAgent {
       const result = await resolveCryptoPrice(criteria);
       return { sources: result.sources, agreement: result.confidence / 100, proposedOutcome: result.outcome, confidence: result.confidence };
     }
-    // Placeholders for other domains
-    const sources =
-      req.domain === 'sports'
-        ? ['https://www.espn.com', 'https://www.thescore.com', 'https://www.nba.com']
-        : ['https://www.apnews.com', 'https://www.reuters.com', 'https://www.bbc.com'];
-    const agreement = 0.8;
-    return { sources, agreement };
+    if (req.domain === 'sports') {
+      const criteria = parseCriteria('sports', req.resolutionCriteria);
+      const result = await resolveSportsMatch(criteria);
+      return { sources: result.sources, agreement: result.confidence / 100, proposedOutcome: result.outcome, confidence: result.confidence };
+    }
+    if (req.domain === 'elections') {
+      const criteria = parseCriteria('elections', req.resolutionCriteria);
+      const result = await resolveElectionWinner(criteria);
+      return { sources: result.sources, agreement: result.confidence / 100, proposedOutcome: result.outcome, confidence: result.confidence };
+    }
+    return { sources: [], agreement: 0.5 };
   }
 }

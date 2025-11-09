@@ -41,7 +41,7 @@ router.get('/proof/:marketId', async (req, res) => {
   const { marketId } = req.params;
   const entry = store.get(marketId);
   if (!entry) return res.status(404).json({ error: 'Not found' });
-  return res.json({ marketId, sources: entry.result.sources, proofHash: entry.result.proofHash, timestamp: entry.timestamp });
+  return res.json({ marketId, sources: entry.result.sources, proofHash: entry.result.proofHash, cid: entry.result.cid || null, timestamp: entry.timestamp });
 });
 
 router.get('/analytics', async (_req, res) => {
@@ -51,6 +51,22 @@ router.get('/analytics', async (_req, res) => {
     accuracyEstimatePct: 0,
     revenueUsdEstimate: 0
   });
+});
+
+router.get('/feed', async (_req, res) => {
+  const list = store.listLatest(50);
+  const feed = list.map((e) => ({
+    marketId: e.request.marketId,
+    eventDescription: e.request.eventDescription,
+    domain: e.request.domain,
+    outcome: e.result.outcome,
+    confidence: e.result.confidence,
+    proofHash: e.result.proofHash,
+    cid: e.result.cid || null,
+    timestamp: e.timestamp,
+    txHash: e.result.txHash
+  }));
+  return res.json({ items: feed });
 });
 
 export default router;
