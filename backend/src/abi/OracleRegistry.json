@@ -1,0 +1,14 @@
+[
+  {
+    "inputs": [
+      { "internalType": "string", "name": "marketId", "type": "string" },
+      { "internalType": "uint8", "name": "outcome", "type": "uint8" },
+      { "internalType": "uint8", "name": "confidenceScore", "type": "uint8" },
+      { "internalType": "bytes32", "name": "proofHash", "type": "bytes32" }
+    ],
+    "name": "submitResolution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

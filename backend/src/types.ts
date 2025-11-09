@@ -13,6 +13,7 @@ export interface ResolutionResult {
   outcome: Outcome;
   confidence: number;
   proofHash: string;
+  cid?: string | null;
   sources: string[];
   resolutionTime: number; // seconds
   txHash: string | null; // BNB Chain transaction (future)
