@@ -35,6 +35,13 @@ Resolve prediction markets in seconds, not days. This repository contains the in
    - `GET  /api/v1/proof/:marketId`
    - `GET  /api/v1/analytics`
 
+Resolution Criteria (Crypto):
+
+- JSON: `{ "domain": "crypto", "type": "price_above", "symbol": "BTC", "price": 50000, "timestamp": "2025-11-08T12:00:00Z" }`
+- Colon: `price_above:BTC:50000:2025-11-08T12:00:00Z`
+
+The API aggregates Binance and Coinbase 1-minute candles at the given timestamp and evaluates the outcome with a confidence score.
+
 ## Project Structure
 
 ```
