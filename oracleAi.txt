@@ -1,0 +1,421 @@
+AI Oracle Network - Product Requirements Document
+Executive Summary
+Project Name: OracleAI (or similar)
+Tagline: "Resolve prediction markets in seconds, not days"
+Platform: BNB Chain
+Timeline: 4 weeks (Hackathon MVP)
+Vision
+Transform prediction market infrastructure by providing instant, AI-powered oracle resolution for
+objective events, reducing settlement time from 24-48 hours to under 1 minute while maintaining
+accuracy and decentralization.
+Problem Statement
+Current Pain Points
+1. Slow Resolution: UMA's Optimistic Oracle takes 24-48 hours to settle markets
+2. Capital Inefficiency: Traders' funds locked during dispute periods
+3. Poor UX: Users wait days to claim winnings, killing engagement
+4. Market Limitations: Slow oracles prevent time-sensitive markets (live sports, breaking news)
+5. Vulnerability Window: Long dispute periods increase manipulation risk in low-liquidity markets
+Market Opportunity
+- Polymarket processes $2B+ monthly volume but relies on slow oracles
+- CZ identified prediction market oracles as key opportunity area
+- Sports betting market alone: $200B+ annually
+- Real-time resolution unlocks new market categories
+Solution Overview
+Core Product
+An AI-powered oracle network that:
+1. Instantly verifies objective outcomes using multi-source data aggregation
+2. Provides confidence scoring for resolution quality
+3. Escalates uncertainty to human arbitrators or UMA OO fallback
+4. Operates on BNB Chain with cross-chain compatibility
+5. Generates revenue through per-resolution fees
+Key Innovation
+Multi-agent AI system that cross-references multiple data sources (APIs, web scraping, social
+media) to achieve consensus on objective outcomes with cryptographic proof of verification
+process.
+Target Users
+Primary Users (MVP)
+1. Prediction Market Platforms: Polymarket alternatives, new protocols
+2. DeFi Developers: Building prediction market features
+3. Market Makers: Requiring fast settlement for capital efficiency
+Secondary Users (Post-MVP)
+4. Sports Betting Platforms
+5. Event-based DeFi Protocols (insurance, derivatives)
+6. DAO Governance (objective proposal outcomes)
+Core Features (MVP)
+1. AI Resolution Engine
+Priority: P0 (Critical)
+Functionality:
+- Multi-source data aggregation for event verification
+- Support for initial domains:
+- Sports outcomes (scores, winners)
+- Cryptocurrency prices (BTC/ETH at timestamp)
+- Election results (US only for MVP)
+- LLM-based reasoning for context understanding
+- Confidence scoring (0-100%)
+Technical Requirements:
+- Claude/GPT-4 integration for event interpretation
+- Web scraping (ESPN, AP News, CoinGecko, etc.)
+- API integration (SportsRadar, CryptoCompare, Google News)
+- Minimum 3 independent sources for consensus
+- Resolution time: <60 seconds for 95% of events
+Success Metrics:
+- 98%+ accuracy vs. ground truth
+- Sub-60 second average resolution time
+- 90%+ confidence score on resolved events
+2. Smart Contract Infrastructure
+Priority: P0 (Critical)
+Components:
+A. Oracle Registry Contract
+```solidity
+- registerMarket(marketId, eventDescription, resolutionCriteria)
+- submitResolution(marketId, outcome, confidenceScore, proofHash)
+- challengeResolution(marketId, stake)
+- finalizeResolution(marketId)
+B. Dispute Resolution Contract
+- Stake-based challenges (minimum 1 BNB)
+- 2-hour challenge window for high-confidence (>90%) resolutions
+- 12-hour window for medium-confidence (70-90%)
+- Automatic escalation to UMA OO for low-confidence (<70%)
+C. Fee Collection Contract
+- Per-resolution fees (0.1% of market volume, min $5)
+- Arbitrator reward distribution
+- Treasury management
+Technical Requirements:
+- Deploy on BNB Chain testnet (week 2) and mainnet (week 4)
+- Gas optimization for <$0.50 per resolution
+- Upgradeable proxy pattern for iterative improvements
+- Event emission for off-chain indexing
+3. Data Verification Pipeline
+Priority: P0 (Critical)
+Architecture:Event → Multi-Agent System → Consensus → Proof Generation → On-Chain
+Submission
+Agents:
+1. Scraper Agent: Collects data from web sources
+2. API Agent: Fetches structured data from APIs
+3. Validator Agent: Cross-references and detects conflicts
+4. Reasoning Agent: LLM-based interpretation of ambiguous cases
+5. Proof Agent: Generates cryptographic proof of verification process
+Data Sources (MVP):
+- Sports: ESPN API, TheScore, official league sites
+- Crypto: CoinGecko, CoinMarketCap, Binance API
+- Elections: AP Election API, major news outlets (NYT, BBC, Reuters)
+Proof System:
+- IPFS storage of raw data snapshots
+- Merkle tree of source URLs + timestamps
+- Signed attestation from AI agents
+- On-chain proof hash for verifiability
+4. Web Dashboard
+Priority: P1 (High)
+Pages:
+A. Home/Explorer
+- Live feed of recent resolutions
+- Resolution time vs. UMA OO comparison
+- Accuracy statistics
+- Total markets resolved
+B. Market Resolution Request
+- Submit market for resolution
+- Input: Market ID, event description, resolution criteria
+- Real-time status updates
+- Display confidence score and proof
+C. Verification Proof Viewer
+- Show all data sources used
+- Display AI reasoning process
+- Link to IPFS proof data
+- Timestamped audit trail
+D. Analytics Dashboard
+- Resolution speed metrics
+- Domain-specific accuracy rates
+- Fee revenue tracking
+- Top integrated platforms
+Technical Stack:
+- React + TypeScript frontend
+- TailwindCSS for styling
+- Web3.js/ethers.js for blockchain interaction
+- Real-time updates via WebSocket
+5. Developer API
+Priority: P1 (High)
+Endpoints:
+```javascript
+POST /api/v1/resolve
+{
+"marketId": "string",
+"eventDescription": "string",
+"resolutionCriteria": "string",
+"domain": "sports|crypto|elections"
+}
+Response:
+{
+"outcome": "Yes|No|Invalid",
+"confidence": 95,
+"proofHash": "0x...",
+"sources": ["url1", "url2", "url3"],
+"resolutionTime": 42, // seconds
+"txHash": "0x..." // BNB Chain transaction
+}
+GET /api/v1/status/{marketId}
+GET /api/v1/proof/{marketId}
+GET /api/v1/analytics
+Authentication:
+- API key generation in dashboard
+- Rate limiting: 100 requests/hour (free tier)
+- Premium tier: 1000 requests/hour
+Non-Functional Requirements
+Performance
+- 95th percentile resolution time: <60 seconds
+- 99th percentile resolution time: <5 minutes
+- API latency: <200ms (excluding AI processing)
+- Dashboard load time: <2 seconds
+Security
+- Multi-signature control for treasury
+- Rate limiting to prevent spam
+- Secure API key storage
+- IPFS proof immutability
+- Smart contract audit before mainnet
+Scalability
+- Handle 1,000 resolutions/day (MVP)
+- Support 10,000+ registered markets
+- Multi-region API deployment
+- Horizontal scaling for AI agents
+Reliability
+- 99.5% uptime SLA
+- Fallback to UMA OO on AI failure
+- Redundant data source fallbacks
+- Automated health monitoring
+Revenue Model
+Fee Structure
+1. Per-Resolution Fee: 0.1% of market volume (minimum $5 USD in BNB)
+2. API Subscription Tiers:
+- Free: 100 requests/hour
+- Pro: $99/month - 1,000 requests/hour + priority support
+- Enterprise: Custom pricing - Unlimited + SLA + dedicated infrastructure
+3. Dispute Fees: 2% of staked amount on unsuccessful challenges
+Revenue Projections (Year 1)
+- Assumption: 5,000 markets resolved/month at $20 avg fee = $100K/month
+- API subscriptions: 50 Pro users = $5K/month
+- Total: ~$1.26M ARR (conservative)
+Technical Architecture
+System Components
+┌─────────────────────────────────────────────┐
+│ User Interface Layer │
+│ (Web Dashboard + Developer API) │
+└──────────────────┬──────────────────────────┘
+│
+┌──────────────────▼──────────────────────────┐
+│ Application Layer (Node.js) │
+│ - Event Queue Management │
+│ - Multi-Agent Orchestration │
+│ - Consensus Algorithm │
+└──────────────────┬──────────────────────────┘
+│
+┌──────────────────▼──────────────────────────┐
+│ AI Agent Network │
+│ - Scraper Agents (Puppeteer/Playwright) │
+│ - API Agents (Axios/Fetch) │
+│ - Validator Agents (Conflict Resolution) │
+│ - Reasoning Agents (Claude API) │
+│ - Proof Generation │
+└──────────────────┬──────────────────────────┘
+│
+┌──────────┴──────────┐
+▼ ▼
+┌───────────────┐ ┌────────────────┐
+│ Data Sources │ │ Blockchain │
+│ - APIs │ │ (BNB Chain) │
+│ - Web Scraping│ │ - Contracts │
+│ - Social Media│ │ - IPFS Proofs │
+└───────────────┘ └────────────────┘
+Tech Stack
+Backend:
+- Node.js + TypeScript
+- Express.js for API
+- Bull/BullMQ for job queues
+- Redis for caching
+- PostgreSQL for metadata storage
+AI/ML:
+- Anthropic Claude API (primary LLM)
+- LangChain for agent orchestration
+- Puppeteer for web scraping
+- Axios for API calls
+Blockchain:
+- Solidity 0.8.x
+- Hardhat development environment
+- OpenZeppelin contracts
+- Ethers.js for interactions
+Infrastructure:
+- Docker containers
+- AWS/GCP for hosting
+- IPFS (Pinata) for proof storage
+- BNB Chain RPC nodes
+Development Phases
+Week 1: Foundation
+Goal: Core AI resolution engine + basic smart contracts
+Deliverables:
+- [ ] Multi-agent system architecture
+- [ ] Sports outcome resolution (NBA/NFL)
+- [ ] Crypto price resolution (BTC/ETH)
+- [ ] Basic smart contracts (Registry + Resolution)
+- [ ] IPFS proof storage integration
+Team Allocation:
+- Backend Dev: AI agent implementation
+- Smart Contract Dev: Contract development
+- Full-stack Dev: Basic API endpoints
+Week 2: Integration & Testing
+Goal: End-to-end resolution flow on testnet
+Deliverables:
+- [ ] Complete smart contract suite deployed on BNB testnet
+- [ ] Web dashboard (basic UI)
+- [ ] API documentation (Swagger/Postman)
+- [ ] Unit tests (80% coverage)
+- [ ] Integration tests for resolution flow
+- [ ] Test resolutions for 10+ real events
+Team Allocation:
+- All devs: Integration work
+- QA: Test case development
+- PM: Documentation
+Week 3: Refinement & Demo Prep
+Goal: Polish UX, add analytics, prepare demo
+Deliverables:
+- [ ] Enhanced dashboard with analytics
+- [ ] Proof viewer page
+- [ ] Speed comparison vs. UMA OO
+- [ ] Gas optimization
+- [ ] Demo script preparation
+- [ ] Video recording (rough cut)
+Team Allocation:
+- Frontend Dev: Dashboard polish
+- Backend Dev: Performance optimization
+- PM: Demo preparation
+Week 4: Launch & Submission
+Goal: Mainnet deployment, final demo, submission
+Deliverables:
+- [ ] Smart contract audit (automated tools)
+- [ ] Mainnet deployment on BNB Chain
+- [ ] Final demo video (5 min max)
+- [ ] GitHub repo cleanup + README
+- [ ] DoraHacks submission
+- [ ] Resolve 3+ real mainnet markets for demo
+Team Allocation:
+- All hands: Final polish
+- PM: Submission materials
+- Marketing: Demo video editing
+Success Metrics (Hackathon)
+Technical Metrics
+- ✅ Resolve ≥20 test events with 95%+ accuracy
+- ✅ Average resolution time <60 seconds
+- ✅ Smart contracts deployed on BNB mainnet
+- ✅ Zero critical vulnerabilities in contracts
+- ✅ Working API with documentation
+Demo Metrics
+- ✅ Side-by-side comparison: AI Oracle (30s) vs. UMA OO (48h)
+- ✅ Live resolution of ongoing event during demo
+- ✅ Display proof verification system
+- ✅ Show revenue potential ($100K+ ARR)
+Submission Quality
+- ✅ Clean, documented GitHub repo
+- ✅ 5-min demo video showing full flow
+- ✅ Clear differentiation from existing solutions
+- ✅ Obvious revenue model
+- ✅ Post-hackathon roadmap
+Risks & Mitigation
+Technical Risks
+| Risk | Impact | Mitigation |
+||--||
+| AI hallucination/errors | High | Multi-source verification, confidence thresholds, UMA fallback |
+| Data source unavailability | Medium | Redundant sources (min 5 per domain), graceful
+degradation |
+| BNB Chain congestion | Low | Gas optimization, batch processing, fallback RPC nodes |
+| API rate limits | Medium | Multiple API keys, caching, paid tiers |
+Business Risks
+| Risk | Impact | Mitigation |
+||--||
+| Low adoption | High | Free tier, easy integration, clear docs, demo integrations |
+| Competition from established oracles | Medium | Speed advantage, better UX, lower costs |
+| Regulatory uncertainty | Low | Focus on objective events, no prediction market operation |
+Execution Risks
+| Risk | Impact | Mitigation |
+||--||
+| Timeline slippage | High | Agile sprints, daily standups, MVP focus (cut scope if needed) |
+| Team bandwidth | Medium | Clear role allocation, prioritized backlog |
+| Smart contract bugs | Critical | Automated testing, OpenZeppelin libraries, audit tools |
+Post-Hackathon Roadmap
+Phase 1 (Months 1-3): Production Readiness
+- Full smart contract audit (CertiK/OpenZeppelin)
+- Expand to 10+ event domains
+- Partner with 2-3 prediction market platforms
+- Implement economic security (staking for resolvers)
+Phase 2 (Months 4-6): Scale & Decentralization
+- Launch decentralized resolver network (anyone can run nodes)
+- Cross-chain expansion (Ethereum, Polygon, Arbitrum)
+- DAO governance for dispute resolution
+- Mobile SDK for developers
+Phase 3 (Months 7-12): Market Leadership
+- AI model training on historical resolution data
+- Real-time market creation tools
+- Enterprise partnerships (sports betting platforms)
+- Token launch for network incentives
+Team Requirements
+Hackathon Team (Minimum 3 people)
+Required Roles:
+1. Full-Stack Developer (Lead)
+- Node.js backend + AI agent orchestration
+- React frontend
+- Smart contract integration
+2. Smart Contract Developer
+- Solidity development
+- Security best practices
+- BNB Chain deployment
+3. Product Manager / Designer
+- Demo preparation
+- Documentation
+- Video editing
+- UI/UX guidance
+Optional (Nice-to-have):
+4. ML Engineer for advanced AI logic
+5. DevOps for infrastructure
+Appendix
+A. Sample Event Types (MVP)
+Sports:
+- "Did the Lakers win on Nov 8, 2025?" → Verify ESPN/TheScore/NBA.com
+- "Was the final score Lakers 115 - Warriors 110?" → Exact score verification
+Crypto:
+- "Was BTC above $50,000 on Nov 8, 2025 at 12pm UTC?" → CoinGecko/CMC APIs
+- "Did ETH reach $3,000 this week?" → Historical price data
+Elections:
+- "Who won the mayoral race in NYC?" → AP Election API verification
+B. Confidence Scoring Logic
+Confidence = (Source Agreement × 0.6) + (Source Quality × 0.3) + (Timeliness × 0.1)
+Source Agreement: % of sources agreeing on outcome
+Source Quality: Weighted score based on source reputation
+Timeliness: Recency of data (<1hr = 100%, >24hr = 50%)
+Resolution Action:
+- >90% confidence → Instant resolution with 2hr challenge window
+- 70-90% confidence → 12hr challenge window
+- <70% confidence → Escalate to UMA OO or human arbitrators
+C. Gas Cost Estimates (BNB Chain)
+- Market registration: ~50,000 gas (~$0.10)
+- Resolution submission: ~80,000 gas (~$0.15)
+- Challenge initiation: ~60,000 gas (~$0.12)
+- Finalization: ~40,000 gas (~$0.08)
+Total per market: ~$0.45 (vs. UMA's ~$5-10 on Ethereum)
+D. Demo Script Outline (5 min)
+0:00-0:30: Problem (show Polymarket 48hr wait, capital locked)
+0:30-1:30: Solution walkthrough (architecture diagram, AI agents)
+1:30-3:00: Live demo (resolve real event in <60s, show proof)
+3:00-4:00: Dashboard tour (analytics, speed comparison, revenue)
+4:00-4:30: Technical highlights (smart contracts, BNB Chain)
+4:30-5:00: Vision & roadmap (market opportunity, post-hackathon)
+Conclusion
+OracleAI addresses the 1 priority identified by YZi Labs and CZ: fast, reliable oracle resolution
+for prediction markets. By combining AI agents with cryptographic proofs and BNB Chain's
+efficiency, we enable instant market settlement while maintaining decentralization and accuracy.
+Key Differentiators:
+1. 100x faster than UMA OO (30s vs. 48h)
+2. Multi-source AI verification with proof
+3. Clear revenue model ($1M+ ARR potential)
+4. Built on BNB Chain (low fees, fast finality)
+5. Fallback to UMA OO for edge cases
+This positions us to win the hackathon and build a sustainable, high-impact business in the
+prediction market infrastructure space.
+Document Version: 1.0
+Last Updated: Nov 8, 2025
+Owner: [Your Team Name]
