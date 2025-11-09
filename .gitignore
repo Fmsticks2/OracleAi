@@ -1,0 +1,17 @@
+# Node
+node_modules/
+dist/
+.env
+.DS_Store
+
+# Hardhat
+artifacts/
+cache/
+typechain/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
