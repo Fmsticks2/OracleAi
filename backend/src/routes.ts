@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { ConsensusEngine } from './services/ConsensusEngine';
+import { ResolutionStore } from './services/ResolutionStore';
 import type { ResolutionRequest } from './types';
 
 const router = Router();
 const engine = new ConsensusEngine();
+const store = new ResolutionStore();
 
 const resolveSchema = z.object({
   marketId: z.string().min(1),
@@ -21,6 +23,7 @@ router.post('/resolve', async (req, res) => {
   const reqData = parsed.data as ResolutionRequest;
   try {
     const result = await engine.resolve(reqData);
+    store.save(reqData.marketId, reqData, result);
     return res.json(result);
   } catch (e: any) {
     return res.status(500).json({ error: e?.message || 'Resolution failed' });
@@ -29,12 +32,16 @@ router.post('/resolve', async (req, res) => {
 
 router.get('/status/:marketId', async (req, res) => {
   const { marketId } = req.params;
-  return res.json({ marketId, status: 'unknown', lastUpdated: new Date().toISOString() });
+  const entry = store.get(marketId);
+  if (!entry) return res.json({ marketId, status: 'unknown', lastUpdated: new Date().toISOString() });
+  return res.json({ marketId, status: 'resolved', lastUpdated: entry.timestamp, result: entry.result });
 });
 
 router.get('/proof/:marketId', async (req, res) => {
   const { marketId } = req.params;
-  return res.json({ marketId, sources: [], proofHash: null, timestamp: new Date().toISOString() });
+  const entry = store.get(marketId);
+  if (!entry) return res.status(404).json({ error: 'Not found' });
+  return res.json({ marketId, sources: entry.result.sources, proofHash: entry.result.proofHash, timestamp: entry.timestamp });
 });
 
 router.get('/analytics', async (_req, res) => {
