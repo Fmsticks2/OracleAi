@@ -1,5 +1,8 @@
 import type { ParsedCriteria, CryptoPriceCriteria, SportsMatchCriteria, ElectionsCriteria } from '../types';
 
+export function parseCriteria(domain: 'crypto', raw: string): CryptoPriceCriteria;
+export function parseCriteria(domain: 'sports', raw: string): SportsMatchCriteria;
+export function parseCriteria(domain: 'elections', raw: string): ElectionsCriteria;
 export function parseCriteria(domain: 'crypto' | 'sports' | 'elections', raw: string): ParsedCriteria {
   // Try JSON first
   try {

@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/v1', limiter, apiKeyAuth, routes);
 
-app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.get('/health', (_req: express.Request, res: express.Response) => res.json({ status: 'ok' }));
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   logger.error(err);

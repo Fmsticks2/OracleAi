@@ -23,7 +23,7 @@ function App() {
   const [query, setQuery] = useState('');
   const [domain, setDomain] = useState<'all' | 'crypto' | 'sports' | 'elections'>('all');
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [intervalMs, setIntervalMs] = useState(10000);
+  const [intervalMs] = useState(10000);
 
   const loadFeed = async () => {
     if (tab !== 'feed') return;

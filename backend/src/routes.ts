@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
 import { ConsensusEngine } from './services/ConsensusEngine';
 import { ResolutionStore } from './services/ResolutionStore';
@@ -15,7 +15,7 @@ const resolveSchema = z.object({
   domain: z.enum(['sports', 'crypto', 'elections'])
 });
 
-router.post('/resolve', async (req, res) => {
+router.post('/resolve', async (req: Request, res: Response) => {
   const parsed = resolveSchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({ error: 'Invalid request', details: parsed.error.flatten() });
@@ -33,21 +33,21 @@ router.post('/resolve', async (req, res) => {
   }
 });
 
-router.get('/status/:marketId', async (req, res) => {
+router.get('/status/:marketId', async (req: Request, res: Response) => {
   const { marketId } = req.params;
   const entry = store.get(marketId);
   if (!entry) return res.json({ marketId, status: 'unknown', lastUpdated: new Date().toISOString() });
   return res.json({ marketId, status: 'resolved', lastUpdated: entry.timestamp, result: entry.result });
 });
 
-router.get('/proof/:marketId', async (req, res) => {
+router.get('/proof/:marketId', async (req: Request, res: Response) => {
   const { marketId } = req.params;
   const entry = store.get(marketId);
   if (!entry) return res.status(404).json({ error: 'Not found' });
   return res.json({ marketId, sources: entry.result.sources, proofHash: entry.result.proofHash, cid: entry.result.cid || null, timestamp: entry.timestamp });
 });
 
-router.get('/analytics', async (_req, res) => {
+router.get('/analytics', async (_req: Request, res: Response) => {
   return res.json({
     totalResolutions: 0,
     avgResolutionTimeSec: 0,
@@ -56,7 +56,7 @@ router.get('/analytics', async (_req, res) => {
   });
 });
 
-router.get('/feed', async (_req, res) => {
+router.get('/feed', async (_req: Request, res: Response) => {
   const list = store.listLatest(50);
   const feed = list.map((e) => ({
     marketId: e.request.marketId,
