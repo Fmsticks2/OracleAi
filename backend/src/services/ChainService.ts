@@ -16,6 +16,8 @@ export class ChainService {
       this.provider = new JsonRpcProvider(rpcUrl);
       this.wallet = new Wallet(privateKey, this.provider);
       this.registry = new Contract(address, registryAbi as any, this.wallet);
+      // eslint-disable-next-line no-console
+      console.log('[ChainService] configured', { rpcUrl, address, wallet: this.wallet.address });
     }
   }
 
@@ -34,5 +36,16 @@ export class ChainService {
     const tx = await this.registry!.submitResolution(marketId, u8Outcome, u8Conf, proofHash);
     const receipt = await tx.wait();
     return receipt?.hash || tx.hash;
+  }
+
+  async registerMarket(marketId: string, eventDescription: string, resolutionCriteria: string): Promise<string | null> {
+    if (!this.registry) return null;
+    try {
+      const tx = await this.registry!.registerMarket(marketId, eventDescription, resolutionCriteria);
+      const receipt = await tx.wait();
+      return receipt?.transactionHash || tx.hash;
+    } catch (_e) {
+      return null;
+    }
   }
 }

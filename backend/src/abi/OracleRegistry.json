@@ -10,5 +10,18 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "marketId", "type": "string" },
+      { "internalType": "string", "name": "eventDescription", "type": "string" },
+      { "internalType": "string", "name": "resolutionCriteria", "type": "string" }
+    ],
+    "name": "registerMarket",
+    "outputs": [
+      { "internalType": "bytes32", "name": "idHash", "type": "bytes32" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

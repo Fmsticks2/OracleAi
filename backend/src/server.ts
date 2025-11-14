@@ -1,12 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import pino from 'pino';
 import routes from './routes';
 import { apiKeyAuth } from './middleware/auth';
 import { limiter } from './middleware/rateLimit';
-
-dotenv.config();
 
 const logger = pino({ name: 'oracleai-backend' });
 const app = express();

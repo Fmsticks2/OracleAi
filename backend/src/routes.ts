@@ -26,6 +26,9 @@ router.post('/resolve', async (req, res) => {
     store.save(reqData.marketId, reqData, result);
     return res.json(result);
   } catch (e: any) {
+    // Log the error to aid debugging
+    // eslint-disable-next-line no-console
+    console.error('Resolution error:', e);
     return res.status(500).json({ error: e?.message || 'Resolution failed' });
   }
 });
