@@ -17,6 +17,12 @@
 .header nav button { margin-left: 0.5rem; padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
 .header nav button.active { background: #334155; }
 
+.feed-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; }
+.feed-controls .search { flex: 1; min-width: 220px; padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
+.feed-controls .select { padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
+.feed-controls .auto { color: var(--fg); display: inline-flex; align-items: center; gap: 0.35rem; }
+.feed-controls button { padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
+
 .feed { list-style: none; padding: 0; margin: 0; }
 .feed-item { background: #0b1324; border: 1px solid #1e293b; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; }
 .feed-row { display: flex; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.35rem; }

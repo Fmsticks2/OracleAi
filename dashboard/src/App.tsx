@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css';
 
 type FeedItem = {
@@ -20,16 +20,47 @@ function App() {
   const [marketId, setMarketId] = useState('');
   const [proof, setProof] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [domain, setDomain] = useState<'all' | 'crypto' | 'sports' | 'elections'>('all');
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [intervalMs, setIntervalMs] = useState(10000);
+
+  const loadFeed = async () => {
+    if (tab !== 'feed') return;
+    setLoading(true);
+    try {
+      const r = await fetch('http://localhost:3000/api/v1/feed');
+      const data = await r.json();
+      setFeed((data.items || []).sort((a: FeedItem, b: FeedItem) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+    } catch (e: any) {
+      setError(e.message || String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (tab !== 'feed') return;
-    setLoading(true);
-    fetch('http://localhost:3000/api/v1/feed')
-      .then((r) => r.json())
-      .then((data) => setFeed(data.items || []))
-      .catch((e) => setError(String(e)))
-      .finally(() => setLoading(false));
-  }, [tab]);
+    let timer: any;
+    // initial load
+    loadFeed();
+    if (autoRefresh) {
+      timer = setInterval(loadFeed, intervalMs);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, autoRefresh, intervalMs]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return feed.filter((item) => {
+      const matchesDomain = domain === 'all' || item.domain === domain;
+      const matchesQuery = !q || item.marketId.toLowerCase().includes(q) || item.eventDescription.toLowerCase().includes(q);
+      return matchesDomain && matchesQuery;
+    });
+  }, [feed, domain, query]);
 
   const fetchProof = async () => {
     setError(null);
@@ -57,13 +88,31 @@ function App() {
 
       {tab === 'feed' && (
         <section>
+          <div className="feed-controls">
+            <input
+              className="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search marketId or description"
+            />
+            <select className="select" value={domain} onChange={(e) => setDomain(e.target.value as any)}>
+              <option value="all">All Domains</option>
+              <option value="crypto">Crypto</option>
+              <option value="sports">Sports</option>
+              <option value="elections">Elections</option>
+            </select>
+            <label className="auto">
+              <input type="checkbox" checked={autoRefresh} onChange={(e) => setAutoRefresh(e.target.checked)} /> Auto-refresh
+            </label>
+            <button onClick={loadFeed}>Refresh</button>
+          </div>
           {loading ? (
             <p>Loading…</p>
           ) : error ? (
             <p className="error">{error}</p>
           ) : (
             <ul className="feed">
-              {feed.map((item) => (
+              {filtered.map((item) => (
                 <li key={item.marketId} className="feed-item">
                   <div className="feed-row">
                     <strong>{item.marketId}</strong>
@@ -89,6 +138,9 @@ function App() {
                   </div>
                 </li>
               ))}
+              {filtered.length === 0 && !loading && (
+                <li className="feed-item"><em>No results</em></li>
+              )}
             </ul>
           )}
         </section>
