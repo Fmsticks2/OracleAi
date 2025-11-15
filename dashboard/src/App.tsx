@@ -11,11 +11,23 @@ type FeedItem = {
   cid: string | null;
   timestamp: string;
   txHash: string | null;
+  chainId?: number | null;
 };
 
 function App() {
   const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
   const explorerBase = (import.meta as any).env?.VITE_EXPLORER_BASE_URL || 'https://testnet.bscscan.com';
+  const explorerMapRaw = (import.meta as any).env?.VITE_EXPLORER_BASE_MAP || '';
+  const explorerMap: Record<number, string> = useMemo(() => {
+    const map: Record<number, string> = {};
+    const entries = String(explorerMapRaw).split(',').map(s => s.trim()).filter(Boolean);
+    for (const ent of entries) {
+      const [k, v] = ent.split('=');
+      const id = Number(k);
+      if (!isNaN(id) && v) map[id] = v;
+    }
+    return map;
+  }, [explorerMapRaw]);
   const [tab, setTab] = useState<'feed' | 'proof'>('feed');
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -133,7 +145,7 @@ function App() {
                       </a>
                     )}
                     {item.txHash && (
-                      <a href={`${explorerBase}/tx/${item.txHash}`} target="_blank" rel="noreferrer">
+                      <a href={`${(item.chainId && explorerMap[item.chainId]) ? explorerMap[item.chainId] : explorerBase}/tx/${item.txHash}`} target="_blank" rel="noreferrer">
                         Tx
                       </a>
                     )}

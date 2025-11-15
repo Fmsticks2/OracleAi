@@ -17,6 +17,7 @@ export interface ResolutionResult {
   sources: string[];
   resolutionTime: number; // seconds
   txHash: string | null; // BNB Chain transaction (future)
+  chainId?: number | null;
 }
 
 // Criteria types (initial: crypto)

@@ -67,7 +67,8 @@ router.get('/feed', async (_req: Request, res: Response) => {
     proofHash: e.result.proofHash,
     cid: e.result.cid || null,
     timestamp: e.timestamp,
-    txHash: e.result.txHash
+    txHash: e.result.txHash,
+    chainId: (e.result as any).chainId ?? null
   }));
   return res.json({ items: feed });
 });

@@ -4,6 +4,7 @@ import { ValidatorAgent } from '../agents/ValidatorAgent';
 import { ReasoningAgent } from '../agents/ReasoningAgent';
 import { ProofAgent } from '../agents/ProofAgent';
 import { ChainService } from './ChainService';
+import { config } from '../config';
 import type { ResolutionRequest, ResolutionResult } from '../types';
 
 export class ConsensusEngine {
@@ -63,7 +64,8 @@ export class ConsensusEngine {
       cid: cid || null,
       sources: validation.sources,
       resolutionTime,
-      txHash
+      txHash,
+      chainId: config.chain?.chainId ?? undefined
     };
   }
 }

@@ -25,6 +25,8 @@ spec:
               value: "http://oracleai-backend:3000/api/v1"
             - name: VITE_EXPLORER_BASE_URL
               value: "https://testnet.bscscan.com"
+            - name: VITE_EXPLORER_BASE_MAP
+              value: "56=https://bscscan.com,97=https://testnet.bscscan.com"
           readinessProbe:
             httpGet:
               path: /

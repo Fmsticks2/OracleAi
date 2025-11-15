@@ -31,6 +31,8 @@ spec:
               value: "http://your-dashboard-domain"
             - name: RATE_LIMIT_MAX
               value: "200"
+            - name: CHAIN_ID
+              value: "97" # set 56 for mainnet
             - name: RPC_URL
               valueFrom:
                 secretKeyRef:

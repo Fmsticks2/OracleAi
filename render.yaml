@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: oracleai-backend
+    env: node
+    plan: starter
+    region: oregon
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "3000"
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: CORS_ORIGIN
+        value: https://your-dashboard.onrender.com
+      - key: RATE_LIMIT_MAX
+        value: "200"
+      - key: RPC_URL
+        sync: false
+      - key: REGISTRY_ADDRESS
+        sync: false
+      - key: PRIVATE_KEY
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: CHAIN_ID
+        value: "97" # 56 mainnet, 97 testnet
+      - key: USE_REDIS_QUEUE
+        value: "false" # set true if using Upstash Redis
+      - key: USE_REDIS_NONCE
+        value: "false"
+      - key: QUEUE_WORKER
+        value: "0" # set to 1 on a single worker instance
+      - key: REDIS_URL
+        sync: false
+
+  - type: static
+    name: oracleai-dashboard
+    plan: starter
+    region: oregon
+    rootDir: dashboard
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://oracleai-backend.onrender.com/api/v1
+      - key: VITE_EXPLORER_BASE_URL
+        value: https://testnet.bscscan.com
+      - key: VITE_EXPLORER_BASE_MAP
+        value: 56=https://bscscan.com,97=https://testnet.bscscan.com
