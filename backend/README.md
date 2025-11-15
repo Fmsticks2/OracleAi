@@ -19,6 +19,9 @@ Copy `.env.example` to `.env` and set:
 - `COINGECKO_API_KEY` — optional API key
 - `PRIVATE_KEY` — wallet key for on-chain submission (optional)
 - `PINATA_API_KEY` and `PINATA_SECRET_KEY` — for IPFS pinning of proof payloads (optional)
+- `REDIS_URL` — enable Redis-backed queue and nonce store (recommended for multi-replica)
+- `USE_REDIS_QUEUE` and `USE_REDIS_NONCE` — set to `true` to enable distributed queue and nonce allocation
+- `QUEUE_WORKER` — set to `1` on exactly one replica to run the chain worker
 
 ## Endpoints
 

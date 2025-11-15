@@ -15,6 +15,7 @@ type FeedItem = {
 
 function App() {
   const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+  const explorerBase = (import.meta as any).env?.VITE_EXPLORER_BASE_URL || 'https://testnet.bscscan.com';
   const [tab, setTab] = useState<'feed' | 'proof'>('feed');
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -132,7 +133,7 @@ function App() {
                       </a>
                     )}
                     {item.txHash && (
-                      <a href={`https://testnet.bscscan.com/tx/${item.txHash}`} target="_blank" rel="noreferrer">
+                      <a href={`${explorerBase}/tx/${item.txHash}`} target="_blank" rel="noreferrer">
                         Tx
                       </a>
                     )}

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracleai-dashboard
+  labels:
+    app: oracleai-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oracleai-dashboard
+  template:
+    metadata:
+      labels:
+        app: oracleai-dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: your-registry/oracleai-dashboard:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: VITE_API_BASE_URL
+              value: "http://oracleai-backend:3000/api/v1"
+            - name: VITE_EXPLORER_BASE_URL
+              value: "https://testnet.bscscan.com"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracleai-dashboard
+spec:
+  selector:
+    app: oracleai-dashboard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

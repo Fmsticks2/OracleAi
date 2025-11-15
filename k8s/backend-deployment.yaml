@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracleai-backend
+  labels:
+    app: oracleai-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oracleai-backend
+  template:
+    metadata:
+      labels:
+        app: oracleai-backend
+    spec:
+      containers:
+        - name: backend
+          image: your-registry/oracleai-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: NODE_ENV
+              value: "production"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: CORS_ORIGIN
+              value: "http://your-dashboard-domain"
+            - name: RATE_LIMIT_MAX
+              value: "200"
+            - name: RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: oracleai-secrets
+                  key: rpc_url
+            - name: REGISTRY_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: oracleai-secrets
+                  key: registry_address
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oracleai-secrets
+                  key: private_key
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oracleai-secrets
+                  key: api_key
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: oracleai-secrets
+                  key: redis_url
+            - name: USE_REDIS_QUEUE
+              value: "true"
+            - name: USE_REDIS_NONCE
+              value: "true"
+            - name: QUEUE_WORKER
+              value: "1"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracleai-backend
+spec:
+  selector:
+    app: oracleai-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
