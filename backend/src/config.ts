@@ -6,5 +6,11 @@ export const config = {
   },
   apiKeys: {
     coingecko: process.env.COINGECKO_API_KEY || ''
+  },
+  security: {
+    corsOrigin: process.env.CORS_ORIGIN || ''
+  },
+  limits: {
+    rateLimitMax: Number(process.env.RATE_LIMIT_MAX || 100)
   }
 };

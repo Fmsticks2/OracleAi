@@ -14,6 +14,7 @@ type FeedItem = {
 };
 
 function App() {
+  const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
   const [tab, setTab] = useState<'feed' | 'proof'>('feed');
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ function App() {
     if (tab !== 'feed') return;
     setLoading(true);
     try {
-      const r = await fetch('http://localhost:3000/api/v1/feed');
+      const r = await fetch(`${apiBase}/feed`);
       const data = await r.json();
       setFeed((data.items || []).sort((a: FeedItem, b: FeedItem) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
     } catch (e: any) {
@@ -67,7 +68,7 @@ function App() {
     setProof(null);
     if (!marketId) return;
     try {
-      const r = await fetch(`http://localhost:3000/api/v1/proof/${encodeURIComponent(marketId)}`);
+      const r = await fetch(`${apiBase}/proof/${encodeURIComponent(marketId)}`);
       if (!r.ok) throw new Error('Not found');
       const data = await r.json();
       setProof(data);
