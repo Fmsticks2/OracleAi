@@ -1,0 +1,18 @@
+[
+  {
+    "type": "function",
+    "name": "getMarket",
+    "stateMutability": "view",
+    "inputs": [{ "name": "marketId", "type": "uint256" }],
+    "outputs": [{ "name": "market", "type": "address" }]
+  },
+  {
+    "type": "event",
+    "name": "MarketCreated",
+    "inputs": [
+      { "name": "marketId", "type": "uint256", "indexed": true },
+      { "name": "market", "type": "address", "indexed": false }
+    ],
+    "anonymous": false
+  }
+]

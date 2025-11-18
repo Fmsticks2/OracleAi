@@ -3,37 +3,61 @@
   --fg: #e2e8f0;
   --accent: #22c55e;
   --muted: #64748b;
+  --card: #0b1324;
+  --border: #1e293b;
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   color: var(--fg);
 }
 
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.header h1 { margin: 0; font-size: 1.5rem; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.header .title { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 1.6rem; }
+.title-icon { color: var(--accent); font-size: 1.6rem; }
 .header nav button { margin-left: 0.5rem; padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
 .header nav button.active { background: #334155; }
 
-.feed-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; }
+.feed-controls { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; align-items: center; }
 .feed-controls .search { flex: 1; min-width: 220px; padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
 .feed-controls .select { padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
-.feed-controls .auto { color: var(--fg); display: inline-flex; align-items: center; gap: 0.35rem; }
+.feed-controls .auto { color: var(--fg); display: inline-flex; align-items: center; gap: 0.4rem; }
 .feed-controls button { padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
 
-.feed { list-style: none; padding: 0; margin: 0; }
-.feed-item { background: #0b1324; border: 1px solid #1e293b; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; }
-.feed-row { display: flex; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.35rem; }
+.feed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0.9rem; }
+.feed-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; box-shadow: 0 0 0 rgba(0,0,0,0); transition: box-shadow 180ms ease; }
+.feed-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+.feed-card.empty { text-align: center; color: var(--muted); }
+.feed-row { display: flex; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; align-items: center; }
+.marketId, .timestamp, .description { display: inline-flex; align-items: center; gap: 0.4rem; }
+.stats { align-items: center; }
+.confidence, .network { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--muted); }
+.network.muted { opacity: 0.7; }
 .badge { padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: 600; }
 .badge.yes { background: #064e3b; color: #34d399; }
 .badge.no { background: #3f1d1d; color: #ef4444; }
 .badge.invalid { background: #3b0764; color: #a78bfa; }
 .error { color: #ef4444; }
 
+.links .link { display: inline-flex; align-items: center; gap: 0.35rem; color: #93c5fd; text-decoration: none; }
+.links .link:hover { text-decoration: underline; }
+
 .proof .controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .proof .controls input { flex: 1; padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
 .proof .controls button { padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
-.proof-card { background: #0b1324; border: 1px solid #1e293b; border-radius: 8px; padding: 0.75rem; }
+.proof-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; }
 .rows { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+
+/* Bet tab styles */
+.bet .bet-controls { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; }
+.bet .bet-controls button { padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
+.bet .wallet-info { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--muted); }
+.bet .bet-form { display: grid; grid-template-columns: 1fr; gap: 0.6rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; }
+.bet .bet-form input { padding: 0.5rem; border-radius: 6px; border: 1px solid #334155; background: #0b1324; color: var(--fg); }
+.bet .bet-outcome { display: flex; gap: 0.75rem; align-items: center; }
+.bet .bet-outcome label { display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+.bet .bet-amount { display: flex; gap: 0.5rem; align-items: center; }
+.bet .bet-amount button { padding: 0.5rem 0.75rem; background: #1f2937; color: var(--fg); border: 1px solid #334155; border-radius: 6px; cursor: pointer; }
+.status { color: #93c5fd; }

@@ -1,0 +1,16 @@
+[
+  {
+    "type": "function",
+    "name": "placeBet",
+    "stateMutability": "payable",
+    "inputs": [{ "name": "outcome", "type": "uint8" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getOutcome",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{ "name": "outcome", "type": "uint8" }]
+  }
+]
